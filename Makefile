@@ -37,7 +37,7 @@ docker-restart:
 	$(DOCKER_COMPOSE) up -d --force-recreate
 
 log:
-	$(DOCKER_COMPOSE) logs -f middleware frontend fuseki traefik
+	$(DOCKER_COMPOSE) logs -f middleware fuseki traefik
 
 log-prod:
 	$(DOCKER_COMPOSE_PROD) logs -f middleware traefik
@@ -57,7 +57,6 @@ init :
 	make bootstrap
 
 install :
-	npm install --prefix ./client
 	npm install --prefix ./server
 
 build:docker-build
@@ -65,16 +64,15 @@ build:docker-build
 build-prod: docker-build-prod
 
 prettier:
-	npm run prettier --prefix ./client
+
 	npm run prettier --prefix ./server
 
 bootstrap:
-	npm run bootstrap --prefix ./src/frontend
-	npm run bootstrap --prefix ./src/middleware
+	npm run bootstrap --prefix ./src/server
 
 # For tests we currently only need fuseki
 test:
 	$(DOCKER_COMPOSE_TEST) build
 	$(DOCKER_COMPOSE_TEST) up -d
-	npm run test --prefix ./src/middleware/tests/
+	npm run test --prefix ./src/server/tests/
 	$(DOCKER_COMPOSE_TEST) down

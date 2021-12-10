@@ -2,6 +2,7 @@ const { TripleStoreService } = require('@semapps/triplestore');
 
 module.exports = {
   mixins: [TripleStoreService],
+  dependencies: ['fuseki-admin'],
   settings: {
     sparqlEndpoint: process.env.SEMAPPS_SPARQL_ENDPOINT,
     mainDataset: process.env.SEMAPPS_MAIN_DATASET,

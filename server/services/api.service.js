@@ -3,23 +3,21 @@ const { Routes: SparqlEndpointRoutes } = require('@semapps/sparql-endpoint');
 
 module.exports = {
   mixins: [ApiGatewayService],
+  dependencies: ['fuseki-admin'],
   settings: {
-    server: true,
     routes: [],
     cors: {
       origin: '*',
+      methods: ['GET', 'PUT', 'PATCH', 'POST', 'DELETE', 'HEAD', 'OPTIONS'],
       exposedHeaders: '*'
     }
   },
-  dependencies: [
-    'fuseki-admin',
-    'ldp',
-    'sparqlEndpoint',
-  ],
-  async started() {
-    [
-      ...(await this.broker.call('ldp.getApiRoutes')),
-      ...(await this.broker.call('sparqlEndpoint.getApiRoutes')),
-    ].forEach(route => this.addRoute(route));
+  methods: {
+    authenticate(ctx, route, req, res) {
+      return Promise.resolve(ctx);
+    },
+    authorize(ctx, route, req, res) {
+      return Promise.resolve(ctx);
+    }
   }
 };

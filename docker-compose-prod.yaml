@@ -2,7 +2,7 @@ version: '3.5'
 services:
   traefik:
     image: "traefik:v2.3"
-    container_name: "traefik-resilience"
+    container_name: "traefik"
     networks:
       - semapps
     command:
@@ -22,9 +22,22 @@ services:
     volumes:
       - "./letsencrypt:/letsencrypt"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
+
+  fuseki_compact:
+    image: semapps/jena-fuseki-webacl:latest
+    entrypoint: /docker-compact-entrypoint.sh
+    image: semapps/jena-fuseki-webacl
+    container_name: fuseki_compact
+    networks:
+      - semapps
+    volumes:
+      - ./data/fuseki:/fuseki
+
   fuseki:
-    image: stain/jena-fuseki:3.10.0
-    container_name: fuseki-resilience
+    image: semapps/jena-fuseki-webacl:latest
+    container_name: fuseki
+    depends_on:
+      - "fuseki_compact"
     volumes:
       - ./data/fuseki:/fuseki
       - ./data/staging:/staging
@@ -41,27 +54,27 @@ services:
     build:
       context: ./server
       dockerfile: Dockerfile
-    container_name: middleware-resilience
+    container_name: middleware
     depends_on:
-      - fuseki
+      - "traefik"
     volumes:
       - ./server/:/app
-    environment:
-      - SEMAPPS_SPARQL_ENDPOINT=http://fuseki-resilience:3030/
-      - SEMAPPS_MAIN_DATASET=localData
-      - SEMAPPS_JENA_USER=admin
-      - SEMAPPS_JENA_PASSWORD=admin
-      - SEMAPPS_HOME_URL=https://data.resilience.data-players.com/
     networks:
       - semapps
     ports:
       - "3000:3000"
     expose:
       - "3000"
-    command: bash -c "npm install && npm start"
+    command: bash -c "yarn install &&  pm2-runtime 'yarn run dev'"
+    environment:
+      - SEMAPPS_SPARQL_ENDPOINT=http://fuseki:3030/
+      - SEMAPPS_MAIN_DATASET=localData
+      - SEMAPPS_JENA_USER=admin
+      - SEMAPPS_JENA_PASSWORD=admin
+      - SEMAPPS_HOME_URL=https://data.fabmob.io/
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.middleware.rule=Host(`data.resilience.data-players.com`)"
+      - "traefik.http.routers.middleware.rule=Host(`data.fabmob.io`)"
       - "traefik.http.routers.middleware.entrypoints=websecure"
       - "traefik.http.routers.middleware.tls.certresolver=myresolver"
 

@@ -30,14 +30,21 @@ docker-clean:
 docker-start:
 	$(DOCKER_COMPOSE) up -d --force-recreate
 
+docker-start-prod-fuseki:
+	$(DOCKER_COMPOSE_PROD) up -d --force-recreate fuseki
+
+remove-secure-dataset:
+	sudo rm -rf data/fuseki/databases/localData/
+	sudo rm -rf data/fuseki/databases/aclData/
+
 docker-start-prod:
-	$(DOCKER_COMPOSE_PROD) up -d --force-recreate
+	$(DOCKER_COMPOSE_PROD) up -d --force-recreate middleware
 
 docker-restart:
 	$(DOCKER_COMPOSE) up -d --force-recreate
 
 log:
-	$(DOCKER_COMPOSE) logs -f middleware fuseki traefik
+	$(DOCKER_COMPOSE) logs -f middleware frontend fuseki traefik
 
 log-prod:
 	$(DOCKER_COMPOSE_PROD) logs -f middleware traefik
@@ -45,6 +52,10 @@ log-prod:
 start: docker-start
 
 start-prod: docker-start-prod
+
+start-prod-complete:
+	make docker-start-prod-fuseki
+	make docker-start-prod
 
 stop: docker-stop
 
@@ -57,6 +68,7 @@ init :
 	make bootstrap
 
 install :
+	npm install --prefix ./client
 	npm install --prefix ./server
 
 build:docker-build
@@ -64,15 +76,16 @@ build:docker-build
 build-prod: docker-build-prod
 
 prettier:
-
+	npm run prettier --prefix ./client
 	npm run prettier --prefix ./server
 
 bootstrap:
-	npm run bootstrap --prefix ./src/server
+	npm run bootstrap --prefix ./src/frontend
+	npm run bootstrap --prefix ./src/middleware
 
 # For tests we currently only need fuseki
 test:
 	$(DOCKER_COMPOSE_TEST) build
 	$(DOCKER_COMPOSE_TEST) up -d
-	npm run test --prefix ./src/server/tests/
+	npm run test --prefix ./src/middleware/tests/
 	$(DOCKER_COMPOSE_TEST) down

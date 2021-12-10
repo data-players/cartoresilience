@@ -74,10 +74,9 @@ services:
       - SEMAPPS_HOME_URL=https://data.fabmob.io/
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.middleware.rule=Host(`data.fabmob.io`)"
+      - "traefik.http.routers.middleware.rule=Host(`data.resilience.data-players.com`)"
       - "traefik.http.routers.middleware.entrypoints=websecure"
       - "traefik.http.routers.middleware.tls.certresolver=myresolver"
-
 networks:
   semapps:
     name: semapps_network

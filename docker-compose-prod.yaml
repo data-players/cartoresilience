@@ -36,6 +36,7 @@ services:
   fuseki:
     image: semapps/jena-fuseki-webacl:latest
     container_name: fuseki
+    restart: on-failure
     depends_on:
       - "fuseki_compact"
     volumes:

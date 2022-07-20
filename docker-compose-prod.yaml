@@ -27,9 +27,6 @@ services:
     image: semapps/jena-fuseki-webacl:latest
     entrypoint: /docker-compact-entrypoint.sh
     image: semapps/jena-fuseki-webacl
-    container_name: fuseki_compact
-    networks:
-      - semapps
     volumes:
       - ./data/fuseki:/fuseki
 

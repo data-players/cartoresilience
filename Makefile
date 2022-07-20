@@ -4,6 +4,8 @@
 DOCKER_COMPOSE=docker-compose -f docker-compose.yaml
 DOCKER_COMPOSE_PROD=docker-compose -f docker-compose-prod.yaml
 DOCKER_COMPOSE_TEST=docker-compose -f docker-compose-test.yaml
+path-cron = $(shell pwd)/compact-cron.sh
+path-cron-prod = $(shell pwd)/compact-cron-prod.sh
 
 # Docker
 docker-build:
@@ -82,6 +84,12 @@ prettier:
 bootstrap:
 	npm run bootstrap --prefix ./src/frontend
 	npm run bootstrap --prefix ./src/middleware
+
+set-compact-cron: 
+	(crontab -l 2>/dev/null; echo "0 4 * * * $(path-cron) >> /tmp/cronlog.txt") | crontab -
+
+set-compact-cron-prod: 
+	(crontab -l 2>/dev/null; echo "0 4 * * * $(path-cron-prod) >> /tmp/cronlog.txt") | crontab -
 
 # For tests we currently only need fuseki
 test:

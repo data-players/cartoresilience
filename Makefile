@@ -51,6 +51,12 @@ log:
 log-prod:
 	$(DOCKER_COMPOSE_PROD) logs -f middleware traefik
 
+compact: 
+	$(DOCKER_COMPOSE) down && $(DOCKER_COMPOSE) up fuseki_compact && $(DOCKER_COMPOSE) up -d
+
+compact-prod:
+	$(DOCKER_COMPOSE_PROD) down && $(DOCKER_COMPOSE_PROD) up fuseki_compact && $(DOCKER_COMPOSE_PROD) up -d
+
 start: docker-start
 
 start-prod: docker-start-prod

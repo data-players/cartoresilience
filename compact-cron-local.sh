@@ -7,12 +7,12 @@
 cd cartoresilience
 
 # Stop all containers including Fuseki
-/usr/local/bin/docker-compose down
+/usr/local/bin/docker-compose -f docker-compose-local.yaml down
 
 # Launch compact service
-/usr/local/bin/docker-compose up -d fuseki_compact
+/usr/local/bin/docker-compose -f docker-compose-local.yaml up -d fuseki_compact
 
 # Restart 
-/usr/local/bin/docker-compose up -d
+/usr/local/bin/docker-compose -f docker-compose-local.yaml up -d
 
 echo "[INFO] Cron job compact finished at" $(date)

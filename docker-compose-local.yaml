@@ -47,6 +47,7 @@ services:
       - fuseki
     volumes:
       - ./server/:/app
+      - ./data/fuseki/databases/localData:/localData
     networks:
       - semapps
     ports:

@@ -37,6 +37,7 @@ services:
     image: semapps/jena-fuseki-webacl
     volumes:
       - ./data/fuseki:/fuseki
+      - ./compact-entrypoint.sh:/docker-compact-entrypoint.sh
 
   middleware:
     build:

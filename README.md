@@ -15,8 +15,7 @@ Les données sont archivées et servies par Vercel :
 - RDF/XML : https://semapps-exports.vercel.app/ademe/ademe.rdf
 
 Elles restent reproductibles via les workflows d'injection de données (à rejouer sur
-une nouvelle instance SemApps). Voir aussi
-[`prod-infos/acces/serveurs-decommissionnes.md`](https://github.com/data-players/prod-infos/blob/main/acces/serveurs-decommissionnes.md).
+une nouvelle instance SemApps). Voir aussi la documentation interne Data Players (`prod-infos/acces/serveurs-decommissionnes.md`).
 
 ## Exports de données
 
